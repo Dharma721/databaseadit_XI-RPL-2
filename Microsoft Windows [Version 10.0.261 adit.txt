@@ -1,0 +1,161 @@
+Microsoft Windows [Version 10.0.26100.6899]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Users\user>cd C:\xampp
+
+C:\xampp>cd C:\xampp\mysql\bin
+
+C:\xampp\mysql\bin>mysql -u root -p
+Enter password:
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MariaDB connection id is 10
+Server version: 10.4.32-MariaDB mariadb.org binary distribution
+
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+MariaDB [(none)]> show database;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'database' at line 1
+MariaDB [(none)]> show databases;
++--------------------------+
+| Database                 |
++--------------------------+
+| aplikas penjualan mobil  |
+| aplikasi_penjualan mobil |
+| aurelya_echa             |
+| db_login_user            |
+| db_pegawai               |
+| db_sekola                |
+| db_sekolah               |
+| db_smk3                  |
+| dblogin                  |
+| dbrs                     |
+| dokter                   |
+| echaaaaa                 |
+| ecommerce_atk            |
+| information_schema       |
+| klinik_sederhana         |
+| murid                    |
+| muridrpl                 |
+| mysql                    |
+| pelajar                  |
+| pendaftaran_siswa        |
+| performance_schema       |
+| perpustakaan digital     |
+| phpmyadmin               |
+| sekolah                  |
+| siswa                    |
+| siswarpl                 |
+| siswarpl1                |
+| test                     |
++--------------------------+
+28 rows in set (0.001 sec)
+
+MariaDB [(none)]> create database klinik_Adit;
+Query OK, 1 row affected (0.002 sec)
+
+MariaDB [(none)]> use klinik_Adit;
+Database changed
+MariaDB [klinik_Adit]> create table dokter (
+    -> id_dokter INT PRIMARY KEY AUTO_INCREMENT,
+    -> nama VARCHAR(100) NOT NULL,
+    -> spesialisasi VARCHAR (100),
+    -> no_telepon VARCHAR (15)
+    -> );
+Query OK, 0 rows affected (0.028 sec)
+
+MariaDB [klinik_Adit]> create table pasien (
+    -> id_pasien INT PRIMARY KEY AUTO_INCREMENT,
+    -> nama VARCHAR(100) NOT NULL,
+    -> no_telepon VARCHAR (15)
+    -> );
+Query OK, 0 rows affected (0.008 sec)
+
+MariaDB [klinik_Adit]> create table janji_temu (
+    -> id_janji_temu INT PRIMARY KEY AUTO_INCREMENT,
+    -> id_dokter INT,
+    -> id_pasien INT,
+    -> tanggal DATE,
+    -> FOREIGN KEY (id_dokter) REFERENCES dokter(id_dokter),
+    -> FOREIGN KEY (id_pasien) REFERENCES pasien(id_pasien)
+    -> );
+Query OK, 0 rows affected (0.023 sec)
+
+MariaDB [klinik_Adit]> INSERT INTO dokter(nama,spesialisasi,no_telepon) VALUES
+    -> ('Dr. Dharma','Gizi','0812345678'),
+    -> ('Dr.Siti','jiwa','08123456780');
+Query OK, 2 rows affected (0.018 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+MariaDB [klinik_Adit]> INSERT INTO pasien (nama,no_telepon)VALUES
+    -> ('rifqi','08223456789'),
+    -> ('fauzi','08223456780');
+Query OK, 2 rows affected (0.007 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+MariaDB [klinik_Adit]> INSERT INTO janji_temu(id_pasien,tanggal)VALUES
+    -> (1,1,'2025-10-2'),
+    -> (2,2,'2024-09-02');
+ERROR 1136 (21S01): Column count doesn't match value count at row 1
+MariaDB [klinik_Adit]> INSERT INTO janji_temu(id_dokter,id_pasien,tanggal)VALUES
+    -> (1,1,'2025-10-01'),
+    -> (2,2,'2024-09-02');
+Query OK, 2 rows affected (0.007 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+MariaDB [klinik_Adit]> SELECT
+    -> janji_temu.id_janji_temu,
+    -> dokter.nama AS nama_dokter,
+    -> pasien.nama AS nama_pasien,
+    -> janji_temu.tanggal
+    -> FROM
+    -> janji_temu
+    -> JOIN dokter ON janji_temu.id_dokter = dokter.id_dokter
+    -> JOIN pasien ON janji_temu.id_pasien = pasien.id_pasien;
++---------------+-------------+-------------+------------+
+| id_janji_temu | nama_dokter | nama_pasien | tanggal    |
++---------------+-------------+-------------+------------+
+|             1 | Dr. Dharma  | rifqi       | 2025-10-01 |
+|             2 | Dr.Siti     | fauzi       | 2024-09-02 |
++---------------+-------------+-------------+------------+
+2 rows in set (0.013 sec)
+
+MariaDB [klinik_Adit]> select *from dokter;
++-----------+------------+--------------+-------------+
+| id_dokter | nama       | spesialisasi | no_telepon  |
++-----------+------------+--------------+-------------+
+|         1 | Dr. Dharma | Gizi         | 0812345678  |
+|         2 | Dr.Siti    | jiwa         | 08123456780 |
++-----------+------------+--------------+-------------+
+2 rows in set (0.000 sec)
+
+MariaDB [klinik_Adit]> select*from pasien;
++-----------+-------+-------------+
+| id_pasien | nama  | no_telepon  |
++-----------+-------+-------------+
+|         1 | rifqi | 08223456789 |
+|         2 | fauzi | 08223456780 |
++-----------+-------+-------------+
+2 rows in set (0.000 sec)
+
+MariaDB [klinik_Adit]> select *from janji_temu;
++---------------+-----------+-----------+------------+
+| id_janji_temu | id_dokter | id_pasien | tanggal    |
++---------------+-----------+-----------+------------+
+|             1 |         1 |         1 | 2025-10-01 |
+|             2 |         2 |         2 | 2024-09-02 |
++---------------+-----------+-----------+------------+
+2 rows in set (0.001 sec)
+
+MariaDB [klinik_Adit]> show tables;
++-----------------------+
+| Tables_in_klinik_adit |
++-----------------------+
+| dokter                |
+| janji_temu            |
+| pasien                |
++-----------------------+
+3 rows in set (0.005 sec)
+
+MariaDB [klinik_Adit]>
